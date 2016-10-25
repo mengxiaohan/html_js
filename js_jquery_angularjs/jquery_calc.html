@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>计算器</title>
+	<script type="text/javascript" src="../jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="js_.js"></script>
+	<script>
+		function calc(){
+			var a = document.getElementById("input1").value; //字符串
+			var b = document.getElementById("input2").value;
+			if(b == "" || b == null){
+				b = "0";
+			}
+			a = parseFloat(a); //动态类型，float
+			b = parseFloat(b);
+			document.getElementById("result").value = a + b;
+		}
+ 
+		//所有dom元素加载完毕后，开始自动执行的方法
+		$(document).ready(function(){
+		  //alert("begin");
+		  
+		  $("#tableOne").hide(); //show  style="display:none"
+			  
+		  $("#input1").on("change", function(){ //给元素绑定onchange
+				calc2();
+		  });
+		  
+		  $(".calcButton").on("click", function(){ //给元素加入点击事件
+				calc2();
+		  });
+		  
+		  //document.getElementById("input1").value =  5; //原生态赋值
+		  //$("#input1").val(66); //jquery实现赋值
+		  js_.setValue("input1", 3213); //自定义js插件赋值
+		  //alert(js_.getValue("input1"));
+		});
+		
+		function calc2(){
+			var a = $("#input1").val(); //通过id获取元素
+			var b = $("#input2").val();
+			if(b == "" || b == null){
+				b = "0";
+			}
+			a = parseFloat(a);
+			b = parseFloat(b);
+			$("#result").val(a + b);
+		}
+	</script>
+</head>
+<body>
+<table id="tableOne" border="1">
+  <tr>
+    <th>Month</th>
+    <th>Savings</th>
+  </tr>
+  <tr>
+    <td>January</td>
+    <td>$100</td>
+  </tr>
+</table>
+
+<input type="text" id="input1"/>
++
+<input type="text" id="input2" value="68"/>
+=
+<input type="text" id="result"/> 
+<button class="calcButton">计算</button>
+</body>
+</html>

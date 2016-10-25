@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset=" utf-8">
+<meta name="author" content="http://www.softwhy.com/" />
+<title>脚本之家</title>
+<style type="text/css" >
+table 
+{
+background:#F90;
+width:400px;
+line-height:20px;
+}
+td 
+{
+border-right:1px solid gray;
+border-bottom:1px solid gray;
+}
+</style>
+<script type="text/javascript" src="../jquery-3.1.1.min.js"></script>
+<script type="text/javascript" > 
+function up(obj) 
+{ 
+var objParentTR=$(obj).parent().parent(); 
+var prevTR=objParentTR.prev(); 
+if(prevTR.length>0) 
+{ 
+prevTR.insertAfter(objParentTR); 
+} 
+} 
+function down(obj) 
+{ 
+var objParentTR=$(obj).parent().parent(); 
+var nextTR=objParentTR.next(); 
+if(nextTR.length>0) 
+{ 
+nextTR.insertBefore(objParentTR); 
+} 
+} 
+</script>
+</head>
+<body>
+<table border="0" >
+<tr>
+<td>脚本之家一</td>
+<td>脚本之家一</td>
+<td>脚本之家一</td>
+<td><a href="#" onclick="up(this)">上移</a> <a href="#" onclick="down(this)">下移</a></td>
+</tr>
+<tr>
+<td>脚本之家二</td>
+<td>脚本之家二</td>
+<td>脚本之家二</td>
+<td><a href="#" onclick="up(this)">上移</a> <a href="#" onclick="down(this)">下移</a></td>
+</tr>
+<tr>
+<td>脚本之家三</td>
+<td>脚本之家三</td>
+<td>脚本之家三</td>
+<td><a href="#" onclick="up(this)">上移</a> <a href="#" onclick="down(this)">下移</a></td>
+</tr>
+<tr>
+<td>脚本之家四</td>
+<td>脚本之家四</td>
+<td>脚本之家四</td>
+<td><a href="#" onclick="up(this)">上移</a> <a href="#" onclick="down(this)">下移</a></td>
+</tr>
+<tr>
+<td>脚本之家五</td>
+<td>脚本之家五</td>
+<td>脚本之家五</td>
+<td><a href="#" onclick="up(this)">上移</a> <a href="#" onclick="down(this)">下移</a></td>
+</tr>
+</table>
+</body>
+</html>

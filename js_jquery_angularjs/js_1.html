@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>js基础</title>
+	<script type="text/javascript" src="./jquery-3.1.1.min.js"></script>
+	<script>
+		var x;
+		if(x == undefined){
+			console.log("x undefined");
+		}
+		
+		//字符串、数字、布尔、数组、对象、Null、Undefined
+		var cars = ["Audi","BMW","Volvo"];
+		var myArray = new Array();
+		var mycars = new Array(3);
+		console.log(cars, typeof cars);
+		cars.push("DASAUTO"); //向数组尾部加个元素
+		console.log(cars);
+		/*
+		http://www.w3school.com.cn/jsref/jsref_obj_array.asp
+		其他方法自己每个尝试一遍： sort()、join()、concat()、unshift、shift
+		*/
+		
+		var person = {age: 20, name:"Gates", id:5566};
+		console.log(person.name);
+		
+		delete person.name;
+		console.log(person.name);
+		
+		
+		//属性是与对象相关的值、方法是能够在对象上执行的动作
+		var car = {}; // = new Object();
+		car.weight = 500;
+		car.color = "black";
+		car.log = function(){
+	　　	console.log(this);
+	　　}
+		car.run = function(weight){
+	　　	this.weight = weight;
+	　　}
+		car.run(800);
+		car.log();
+		
+		
+		var t = "sss"; //声明了一个字符串对象，属性？方法
+		console.log(t.length);
+		console.log(t.replace("s", "a")); //更多方法，自己学习
+			
+		var jsons = '{"name":"CJ", "age":18}'; //定义一个json字符串
+		person = JSON.parse(jsons);
+		console.log(person.age);
+		
+		person.boy = "wang";
+		console.log(person, typeof person)
+		var s = JSON.stringify(person);
+		console.log(s, typeof s);
+		
+		var global = "param";
+		
+		function showData(var1, var2){ //参数任意，调用时如果只有，则后面为undefined
+			console.log(var1, var2, global);
+			var temp = "s"; //局部变量
+		}
+
+		showData(1,2);
+		showData(1);
+		//showData(global, temp); //temp is not defined
+		
+		
+		//运算符; 其他晕算法自己学习一遍
+		var x = 1
+		var y = 2;
+		showData(x + y);
+		
+		//比较运算符
+		var z = "1"; 
+		if(x === z){
+			console.info("=== 比较值和类型");
+		}
+		if(x == z){
+			console.info("== 只比较值");
+		}
+		
+		//逻辑运算符
+		if(x === z || x == z){
+			console.info("|| 或者， && 并且， ! 非");
+		}
+		
+		//条件运算符
+		var m = x === z ? "a" : "b";
+		console.info(m);
+		
+		//条件语句：if, if eles, else if, switch
+		function getData(n){
+			switch(n){
+			case 1:
+			  return "a";
+			  break;
+			case 2:
+			   return "b";
+			  break;
+			default:
+			   return "c";
+			}
+		}
+		console.info(getData(1));
+		console.info(getData(5));
+		
+		//循环语句：for, for/in, while,do/while, break
+		var index = 0;
+		while(true){
+			index ++;
+			if(index == 100){
+				break;
+			}
+			console.log(index);
+		}
+		
+		//异常处理 try catch
+		try{
+			var s = new Array2(1);
+			console.info("yes");
+		}catch(err){
+			console.error("try catch : ", err);
+		}
+		
+		//js 原型
+		var Calculator = function(){};
+		Calculator.prototype = {
+            add: function (x, y) {
+                return x + y;
+            },
+
+            subtract: function (x, y) {
+                return x - y;
+            }
+        };
+		var calc = new Calculator();
+		var s = calc.add(1,2);
+		console.log(s, calc.subtract(1,2));
+	</script>
+</head>
+<body>
+
+</body>
+</html>
