@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<script src="../angular.min.js"></script>
+	<script src="../jquery-3.1.1.min.js"></script>
+	<script src="../angular-animate.min.js"></script>
+	
+	<script>
+	
+		/*
+		* $scope  scope 是一个 JavaScript 对象，带有属性和方法，这些属性和方法可以在视图和控制器中使用
+		* $rootScope 可作用于整个应用中。是各个 controller 中 scope 的桥梁。用 rootscope 定义的值，可以在各个 controller 中使用
+		* AngularJS 过滤器 
+			currency	格式化数字为货币格式。
+			filter	从数组项中选择一个子集。
+			lowercase	格式化字符串为小写。
+			orderBy	根据某个表达式排列数组。
+			uppercase	格式化字符串为大写。
+		* AngularJS 服务(Service) : $location, $http, $timeout
+		* 跨域：js http请求的地址如果跟本身的url比较，端口或者ip发生了改变，就产生了跨域；如果请求的地址不支持跨域请求，那么请求无效
+		* 注意ng-options 与 ng-repeat
+		* 	客户端的验证
+			$dirty	表单有填写记录
+			$valid	字段内容合法的
+			$invalid	字段内容是非法的
+			$pristine	表单没有填写记录
+		* ng-hide ng-show
+		* 全局 API 函数使用 angular 对象进行访问
+			angular.lowercase()	转换字符串为小写
+			angular.uppercase()	转换字符串为大写
+			angular.isString()	判断给定的对象是否为字符串，如果是返回 true。
+			angular.isNumber()	判断给定的对象是否为数字，如果是返回 true。
+		*/
+		var app = angular.module('myApp', []);
+		app.controller('myCtrl', function($scope, $rootScope) {
+			$scope.name = "John Dow"; //全局定义一个参数（参数名是name），类似于初始化一个参数
+			$rootScope.name = "s"; //?全局的不能覆盖局部的？仅只能作为参数传递使用
+			
+			$scope.names = ["北京", "湖北", "湖南"];
+			$scope.selectedName = "北京";
+		});
+		app.controller('myCtrl2', function($scope, $location, $http, $timeout) {
+			$scope.url = $location.absUrl();
+			
+			 $timeout(function () {
+				$scope.url = "How are you today?";
+			}, 2000);
+			
+			$http.get("angularjs_2.html").then(function (response) {
+				$scope.html = response.data;
+			});
+		});
+		
+		app.controller('validateCtrl', function($scope) {
+			$scope.user = 'John Doe';
+			$scope.email = 'john.doe@gmail.com';
+		});
+	</script>
+	<style>
+		div {
+		  transition: all linear 0.5s;
+		  background-color: lightblue;
+		  height: 100px;
+		  width: 100%;
+		  position: relative;
+		  top: 0;
+		  left: 0;
+		}
+
+		.ng-hide {
+		  height: 0;
+		  width: 0;
+		  background-color: transparent;
+		  top:-200px;
+		  left: 200px;
+		}
+	</style>
+  </head>
+<body ng-app="myApp">
+	<div ng-controller="myCtrl">
+		<input ng-model="name">
+		<h1>我的名字是 {{name | uppercase}}</h1>
+		<select ng-model="selectedName" ng-options="x for x in names"> </select>
+		<select ng-model="selectedName"> 
+			<option ng-repeat="x in names">{{x}}</option>
+		</select>
+		
+		<p ng-show="true">我是可见的。</p>
+		<p ng-show="false">我是不可见的。</p>
+		<p ng-show="name == 's'">当name='s'时，我会跟大家见面的</p>
+	</div>
+	<div  ng-controller="myCtrl2">
+		<input ng-model="name">
+		<input ng-model="url">
+		<textarea ng-model="html"></textarea>
+		<h1>我的名字是2 {{name}}</h1>
+	</div>
+	
+	<form  ng-controller="validateCtrl" name="myForm" novalidate>
+
+		<p>用户名:<br>
+		  <input type="text" name="user" ng-model="user" required>
+		  <span style="color:red" ng-show="myForm.user.$dirty && myForm.user.$invalid">
+		  <span ng-show="myForm.user.$error.required">用户名是必须的。</span>
+		  </span>
+		</p>
+
+		<p>邮箱:<br>
+		  <input type="email" name="emailName" ng-model="email" required>
+		  <span style="color:red" ng-show="myForm.emailName.$dirty && myForm.emailName.$invalid">
+		  <span ng-show="myForm.emailName.$error.required">邮箱是必须的。</span>
+		  <span ng-show="myForm.emailName.$error.email">非法的邮箱。</span>
+		  </span>
+		</p>
+
+		<p>
+			<input type="button"  value="我是按钮" ng-disabled="true">
+		  <input type="submit" ng-disabled="myForm.user.$dirty && myForm.user.$invalid || myForm.emailName.$dirty && myForm.emailName.$invalid">
+		</p>
+</form>
+
+
+<h1>隐藏 DIV: <input type="checkbox" ng-model="myCheck"></h1>
+
+<div ng-hide="myCheck"></div>
+</body>
+</html>

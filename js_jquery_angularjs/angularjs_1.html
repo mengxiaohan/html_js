@@ -1,26 +1,58 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
 	<meta charset="utf-8">
-	<title>html5基础</title>
-	<!--
-		新增的元素属性：date
-		新增的元素：
-	-->
-</head>
+	<script src="../angular.min.js"></script>
+	<script src="../jquery-3.1.1.min.js"></script>
+	<script>
+		//页面加载完成就执行
+		$(document).ready(function(){ 
+		　　$("#inputId").keyup(function(){ //键盘弹起事件
+				$("#inputH").text("Hello " + $(this).val());
+			
+				$(this).val(); //input
+				$("#inputH").text(); //h, span, td
+		　　}); 
+	
+			console.log("2222");
+		}); 
+		
+		//加载页面时调用
+		window.onload = function() { 
+			console.log("1111");
+		};
+		
+		/*
+		* 当网页加载完毕，AngularJS 自动开启。
+		* AngularJS 指令是以 ng 作为前缀的 HTML 属性
+		* AngularJS 表达式写在双大括号内：{{ expression }}。
+		* AngularJS 模块（Module） 定义了 AngularJS 应用（ng-app）。AngularJS 控制器（Controller） 用于控制 AngularJS 应用(ng-controller)。
+		*
+		* ng-app 用于告诉 AngularJS, 当前这个元素是根元素(对应的ng命令就能起到作用)。所有 AngularJS 应用都必须要要一个根元素
+		* ng-model 可以为应用数据提供状态值(invalid, dirty, touched, error), 绑定数据（模型）
+		* ng-init 初始化应用程序数据; 可以定义对象，数字，字符串，数组等
+		* ng-repeat 指令对于集合中（数组中）的每个项会 克隆一次 HTML 元素。 显示序号 ($index)
+		* 输出{{paramName}}
+		*/
+			
+		
+	</script>
+  </head>
 <body>
+	<div ng-app="" ng-init="firstName='me'; points=[1,15,19,2,40]">
+		<p>名字 : <input type="text" ng-model="name"></p>
+		<h1>Hello {{name}} {{firstName}}</h1>
+		<p>第三个值为 <span ng-bind="points[2]"></span></p>
+		<p>使用 ng-repeat 来循环数组</p>
+		<ul>
+			<li ng-repeat="x in points">
+			  {{ x }}
+			</li>
+		</ul>
+	</div>
 
 
-<label for="meeting">约会日期：</label>
-<input id="meeting" type="date" value="2014-01-13"/>
-<section></section>
-
-
-<video width="420" controls>
-  <source src="mov_bbb.mp4" type="video/mp4">
-  <source src="mov_bbb.ogg" type="video/ogg">
- Your browser does not support the video tag.
-</video>
-
+	<p>名字2 : <input type="text" id="inputId"></p>
+ 	<h1 id="inputH">Hello</h1>
 </body>
 </html>
