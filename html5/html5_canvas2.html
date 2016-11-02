@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>html5之canvas2</title>
+	
+</head>
+<body>
+	<canvas id="myCanvas"  height="500" width="500"></canvas>
+</body>
+	<script>
+		//http://www.w3school.com.cn/tags/html_ref_canvas.asp
+		//http://blog.csdn.net/jia20003/article/details/9235813
+		//平移，旋转，缩放
+	
+		var c = document.getElementById("myCanvas"); //JavaScript 使用 id 来寻找 canvas 元素
+		var cxt = c.getContext("2d"); 
+		cxt.fillStyle = "#FF0000";  //设置填充颜色
+		cxt.fillRect(0, 0, 50, 50); //在画布上绘制 50 x 50 的矩形，从左上角开始 (0,0)。
+
+		//translate()重新映射画布上的 (0,0) 位置
+		//平移坐标translate(x,y)意思是把(0,0)坐标平移到(x,y)，原来的(0,0)坐标则变成(-x, -y)
+		cxt.translate(50, 50); 
+		
+		cxt.fillStyle = "blue";
+		cxt.fillRect(0, 0, 50, 50);
+		
+		cxt.translate(-50, -50);
+		
+		cxt.fillStyle = "black";
+		cxt.fillRect(0, 50, 50, 50);
+		cxt.fillRect(100, 150, 20, 50); (100, 150)
+		
+		//Scale(a, b)意思是将对象沿着XY轴分别放缩至a*x,  b*y大小。
+		//如果您对绘图进行缩放，所有之后的绘图也会被缩放。定位也会被缩放。如果您 scale(2,2)，那么绘图将定位于距离画布左上角两倍远的位置。
+		//cxt.fillStyle = "yellow";
+		cxt.scale(1.5, 2); //缩放：x放大1.5倍，y轴放大2倍
+		cxt.fillRect(50, 100, 50, 50); //(75, 200)
+		
+		cxt.scale(1/1.5, 1/2); //不缩放，回退
+		cxt.fillStyle = "orange";
+		cxt.fillRect(0, 100, 50, 50);
+		
+		cxt.save();	//保存当前的绘图
+		
+		//旋转角度rotate(Math.PI/8)
+		cxt.fillStyle = "red";
+		cxt.translate(110, 175); //通常做法是旋转与平移一起使用，先将坐标(0,0)平移到中心位置
+		cxt.rotate(90 * Math.PI / 180);
+		cxt.fillRect(-10, -25, 20, 50);
+		
+		cxt.restore(); //回滚到上一次save的状态
+		
+		cxt.fillStyle = "red";
+		cxt.fillRect(175, 150, 50, 50);
+		
+		cxt.transform(1, 45 * Math.PI / 180, 45 * Math.PI / 180, 1, 175, 0); //缩放、旋转、移动； 影响调用之后的绘图
+		//a	水平缩放绘图 1
+		//b	水平倾斜绘图 右旋转45度
+		//c	垂直倾斜绘图 0
+		//d	垂直缩放绘图 1
+		//e	水平移动绘图 175 （X方向）
+		//f	垂直移动绘图 0 （y方向）
+		cxt.fillStyle = "orange";
+		cxt.fillRect(0, 150, 50, 50);
+	</script>
+</html>

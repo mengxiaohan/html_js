@@ -1,0 +1,249 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>贪吃蛇[单机版,上下左右移动，自己不能撞自己]</title>
+	<script type="text/javascript" src="./jquery-3.1.1.min.js"></script>
+	<script>
+		/*
+		贪吃蛇移动坐标分析：
+		上下左右控制头的移动方向，后续的点只是继续
+		*/
+	
+		$(document).ready(function(){
+			drawTable();
+			drawPoints();
+			drawSnaker();
+			taskId = window.setInterval(runSnaker,500);
+			window.addEventListener('keydown', doKeyDown, true);
+		});
+		
+		var currentAngel = 90; //默认向下移动，顺时针方向
+		var snakerArr = []; //贪吃蛇的点坐标
+		var checkPoint = []; //食物坐标
+		var snakerColor;
+		var interval = 10; //表格间距像素；贪吃蛇移动像素
+		var taskId;
+		
+		function getNextXY(){
+			var oldSnakerArr = snakerArr;
+			var index = snakerArr.length - 1;
+			var eat = false;
+			for(var i=0; i<snakerArr.length; i++){
+				//修改每个点的坐标
+				if(i == index){
+					//right
+					if(currentAngel == 0){
+						snakerArr[i] = [snakerArr[i][0] + interval, snakerArr[i][1]];
+					}else if(currentAngel == 90){ //down
+						snakerArr[i] = [snakerArr[i][0], snakerArr[i][1] + interval];
+					}else if(currentAngel == 180){ //left
+						snakerArr[i] = [snakerArr[i][0] - interval, snakerArr[i][1]];
+					}else{ //up
+						snakerArr[i] = [snakerArr[i][0], snakerArr[i][1] - interval];
+					}
+					
+					//判断是否走到了天涯的尽头
+					console.log(snakerArr[i]);
+					if(snakerArr[i][0] == 0 || snakerArr[i][1] == 0 || snakerArr[i][0] == 600 || snakerArr[i][1] == 600){
+						console.log("走到了天涯尽头，停止任务：" + taskId);
+						window.clearInterval(taskId);
+					}
+					
+					//判断是否吃到了食物
+					for(var p=0; p<checkPoint.length; p++){
+						if(snakerArr[i][0] == checkPoint[p][0] && snakerArr[i][1] == checkPoint[p][1]){
+							checkPoint.splice(p, 1); //移除这个点
+							drawPoints(); //重新画图
+							eat = true;
+							break;
+						}
+					}
+				}else{
+					snakerArr[i] = [oldSnakerArr[i+1][0], oldSnakerArr[i+1][1]];
+				}
+			}
+			
+			if(eat){
+				snakerArr.unshift(oldSnakerArr[0]);
+			}
+			
+			//判断是否自己撞上了自己
+			var index = snakerArr.length - 1;
+			for(var i=0; i<index; i++){
+				if(snakerArr[i][0] == snakerArr[index][0] && snakerArr[i][1] == snakerArr[index][1]){
+					console.log("自己撞了自己，停止任务" + taskId);
+					window.clearInterval(taskId);
+				}
+			}
+		}
+		
+		//贪吃蛇跑动：最后一个不要，第一个移动，原来的第一个黑色
+		function runSnaker(){
+			snaker_ctx.clearRect(0,0,600,600);
+			getNextXY();
+			for(var i=0; i<snakerArr.length; i++){
+				var color = "black";
+				if(i == snakerArr.length - 1){
+					color = snakerColor;
+				}
+				snaker_ctx.beginPath();
+				snaker_ctx.strokeStyle = color;
+				snaker_ctx.arc(snakerArr[i][0], snakerArr[i][1], 6, 0, Math.PI * 2, true);
+				snaker_ctx.stroke();
+				snaker_ctx.fillStyle = color;
+				snaker_ctx.fill();
+				snaker_ctx.closePath();
+			}
+		}
+		
+		function drawSnaker(){
+			var canvas = document.getElementById("snaker_canvas");
+			if(!canvas.getContext){
+				return;
+			}
+			canvas.height = 600;
+			canvas.width = 600;
+			snaker_ctx = canvas.getContext("2d");
+			
+			var x = 50;
+			var y = [30,40,50,60];
+			for(var i=0; i<y.length; i++){
+				snaker_ctx.beginPath();
+				snakerColor = "black";
+				if(i == y.length - 1){
+					snakerColor = getRandomColor();
+				}
+				snaker_ctx.strokeStyle = snakerColor;
+				snaker_ctx.arc(x, y[i], 6, 0, Math.PI * 2, true);
+				snaker_ctx.fillStyle = snakerColor;
+				snaker_ctx.fill();
+				snaker_ctx.stroke();
+				snaker_ctx.closePath();
+				snakerArr.push([x, y[i]]);
+			}
+		}
+		
+		var ctx;
+		function drawPoints(){
+			if(checkPoint.length == 0){
+				var canvas = document.getElementById("mycanvas");
+				if(!canvas.getContext){
+					return;
+				}
+				canvas.height = 600;
+				canvas.width = 600;
+				ctx = canvas.getContext("2d");
+			
+				var pointArr = [];
+				var size = 600/interval;
+				for(var i=1; i<size; i++){
+					for(var j=1; j<size; j++){
+						pointArr.push([i*interval, j*interval]);
+					}
+				}
+				
+				var max = pointArr.length;
+				var min = -1;
+				checkPoint = [];
+				for(var n=0; n<200; n++){
+					var i = parseInt(Math.random()* max + min, 10);
+					checkPoint.push(pointArr[i]);
+				}
+			}
+			ctx.clearRect(0,0,600,600);
+			
+			for(var i=0; i<checkPoint.length; i++){
+				ctx.beginPath();
+				var color = getRandomColor();
+				ctx.strokeStyle = color;
+				ctx.arc(checkPoint[i][0], checkPoint[i][1], 3, 0, Math.PI * 2, true);
+				ctx.fillStyle = color;
+				ctx.fill();
+				ctx.stroke();
+				ctx.closePath();
+			}
+		}
+		
+		function getRandomColor() { 
+			var c = '#'; 
+			var cArray = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F']; 
+			for(var i = 0; i < 6;i++) { 
+				var cIndex = Math.round(Math.random()*15); 
+				c += cArray[cIndex]; 
+			} 
+			return c; 
+		} 
+		
+		function drawTable(){
+			var canvas = document.getElementById("table_mycanvas");
+			if(!canvas.getContext){
+				return;
+			}
+			canvas.height = 600;
+			canvas.width = 600;
+			var ctx = canvas.getContext("2d");
+			
+			ctx.beginPath(); 
+			ctx.fillStyle = "#E1E5EC";
+			ctx.fillRect(0,0,canvas.width,canvas.height);
+			
+			var size = canvas.width/interval;
+			//x线
+			for(var i=0; i<=size; i++){
+				if(i==0 || i == size){
+					ctx.strokeStyle = 'red';
+				}else{
+					ctx.strokeStyle = 'black';
+				}
+				ctx.beginPath();
+				ctx.moveTo(0, i * interval);
+				ctx.lineTo(canvas.width, i * interval);
+				ctx.stroke();
+				ctx.closePath();
+			}
+			
+			var size = canvas.height/interval;
+			for(var i=0; i<=size; i++){
+				if(i==0 || i == size){
+					ctx.strokeStyle = 'red';
+				}else{
+					ctx.strokeStyle = 'black';
+				}
+				ctx.beginPath();
+				ctx.moveTo(i * interval, 0);
+				ctx.lineTo(i * interval, canvas.height);
+				ctx.stroke();
+				ctx.closePath();
+			}
+		}
+		
+		function doKeyDown(e) {
+			var keyID = e.keyCode ? e.keyCode :e.which;	
+			if(keyID === 37) { //左
+				currentAngel = 180;
+			}
+			if(keyID === 39) {//右
+				currentAngel = 0;
+			}
+			if(keyID === 38) { //上
+				currentAngel = 270;
+			}
+			if(keyID === 40) {//下
+				currentAngel = 90;
+			}
+		}
+    </script>
+</head>
+<body>
+	<div style="width:600px;height:600px;margin:0 auto;">
+		<canvas id="table_mycanvas"></canvas>
+	</div>
+	<div style="width:600px;height:600px;margin:0 auto;z-index:1;margin-top:-600px;background:transparent">
+		<canvas id="mycanvas"></canvas>
+	</div>
+	<div style="width:600px;height:600px;margin:0 auto;z-index:2;margin-top:-600px;background:transparent">
+		<canvas id="snaker_canvas"></canvas>
+	</div>
+</body>
+</html>
