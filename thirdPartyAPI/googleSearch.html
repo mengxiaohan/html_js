@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>google&百度（内嵌）查询</title>
+	<script type="text/javascript" src="../jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<script>
+  (function() {
+    var cx = '013437515345521858150:wvl_bw2gawm';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+  
+  $(document).ready(function(){
+	$("#search").on("click", function(){
+		var query = {"key": "AIzaSyCXTuR2h9hxRZ3lUwjzhCaWcyZ1RYjdtyg", "cx": "013437515345521858150:wvl_bw2gawm"};
+		query.q = $("#query").val();
+		query.alt = "json";
+		$.ajax({
+			type: 'GET',
+			url: 'https://www.googleapis.com/customsearch/v1',
+			data: query,
+			dataType: 'json',
+			async: false,
+			success: function success(result) {
+				console.log(result);
+			}
+		});
+	})
+  })
+</script>
+<gcse:search></gcse:search>
+<input id="query"/>
+<input type="button" id="search" value="搜索"/>
+<form action="http://www.baidu.com/baidu" target="_blank">
+    <table bgcolor="#FFFFFF">
+		<tr>
+			<td>
+				<input name="tn" type="hidden" value="SE_zzsearchcode_shhzc78w">
+				<a href="http://www.baidu.com/"><img src="http://img.baidu.com/img/logo-80px.gif" alt="Baidu" align="bottom" border="0"></a>
+				<input type="text"  name="word" size="30" baiduSug="1">
+				<input type="submit"  value="百度搜索">
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

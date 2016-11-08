@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>html5之贝塞尔曲线</title>
+	
+</head>
+<body>
+	<canvas id="myCanvas"  height="600" width="600"></canvas>
+</body>
+	<script>
+		var canvas = document.getElementById("myCanvas");
+		var ctx = canvas.getContext("2d"); 
+		var size = 600;
+		var circleInterval = 50;
+		var dataOuter = [9, 12, 25, 22];
+		var circleData = [];
+		
+		ctx.moveTo(0, size/2);
+		ctx.lineTo(size, size/2);
+		ctx.stroke();
+		
+		ctx.moveTo(size/2, 0);
+		ctx.lineTo(size/2, size);
+		ctx.stroke();
+		
+		ctx.strokeStyle = "blue";
+		for(var i=0; i<=dataOuter.length; i++){
+			var current;
+			if(i == dataOuter.length){
+				current = getxy(0, dataOuter);
+			}else{
+				current = getxy(i, dataOuter);
+			}
+			circleData.push(current);
+			console.log(current + ", " + dataOuter[i]);
+			if(i == 0){
+				ctx.beginPath();
+				ctx.moveTo(current[0], current[1]);
+				ctx.fillText(dataOuter[i] + "(" + current[0] + ", " + current[1] + ")", current[0], current[1]);
+			}else if(i == dataOuter.length){
+				ctx.lineTo(current[0], current[1]);
+				ctx.stroke();
+				ctx.closePath();
+			}else{
+				ctx.fillText(dataOuter[i] + " (" + current[0] + ", " + current[1]+ ")", current[0], current[1]);
+				ctx.lineTo(current[0], current[1]);
+			}
+		}
+		
+		function getxy(i, dataOuter){
+			var sinAngle = 360/4;
+			var angle = 360 - sinAngle * i;
+			var radian = angle * Math.PI/180;
+			var r = 3 * circleInterval  + (dataOuter[i] - 8) * 5; //每个磁极减去一个数量级，然后乘以另外一个数量级，画图容易区分，不然就是一个圆（精度不大）
+			var x = size/2 + r * Math.cos(radian);
+			var y = size/2 + r * Math.sin(radian);
+			return [x, y, r];
+		}
+		
+		for(var i=0; i<circleData.length; i++){
+			var current = circleData[i];
+			var up = circleData[i - 1];
+			if(i > 0){
+				console.log(up[0], current[1]);
+				var tempData = [up[0], current[1]];
+				if(i == 2 || i  == 4){
+					tempData = [current[0], up[1]];
+				}
+			}
+			if(i == 0){
+				ctx.beginPath();
+				ctx.moveTo(current[0], current[1]);
+			}else if(i == circleData.length - 1){
+				ctx.quadraticCurveTo(tempData[0], tempData[1], current[0], current[1]); 
+				ctx.stroke();
+				ctx.closePath();
+			}else{
+				ctx.quadraticCurveTo(tempData[0], tempData[1], current[0], current[1]); 
+				//ctx.bezierCurveTo(20,100, current[0], current[1]);
+			}
+		}
+		
+		ctx.strokeStyle = "red";
+		ctx.beginPath();
+		var tempHeight = 15;
+		ctx.moveTo(circleData[0][0], circleData[0][1]);
+		
+		var x_offest = circleData[0][0] + tempHeight;
+		var y_offest = circleData[1][1] - tempHeight;
+		console.log(x_offest, y_offest, circleData[1][0], circleData[1][1]);
+		ctx.quadraticCurveTo(x_offest, y_offest, circleData[1][0], circleData[1][1]);
+		
+		ctx.quadraticCurveTo(circleData[2][0] - tempHeight, circleData[1][1] - tempHeight, circleData[2][0], circleData[2][1]);
+		//ctx.quadraticCurveTo(circleData[5][0] - tempHeight, circleData[5][1] + tempHeight, circleData[3][0], circleData[3][1]);
+		//ctx.quadraticCurveTo(circleData[7][0] + tempHeight, circleData[7][1] + tempHeight, circleData[0][0], circleData[0][1]);
+		ctx.stroke();
+		ctx.closePath();
+	</script>
+</html>
